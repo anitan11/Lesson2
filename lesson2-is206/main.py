@@ -66,13 +66,13 @@ class Signup (MainHandler):
 	EMAIL_RE = re.compile(r'^[\S]+@[\S]+\.[\S]+$')
 	
 	def valid_username(self, username):
-		return username and USER_RE.match(username)
+		return username and self.USER_RE.match(username)
 
 	def valid_password(self, password):
-		return password and PASS_RE.match(password)
+		return password and self.PASS_RE.match(password)
 
 	def valid_email(self, email):
-		return not email or EMAIL_RE.match(email)
+		return not email or self.EMAIL_RE.match(email)
 	
 	def get(self):
 		self.render("signup-form.html")
@@ -104,13 +104,13 @@ class Signup (MainHandler):
 		if have_error:
 			self.render('signup-form.html', **params)
 		else:
-			self.redirect('welcome?username=' + username)
+			self.redirect('/welcome?username=' + username)
 		
-class Welcome(MainHandler):
+class Welcome(Signup):
 	def get(self):
 		username = self.request.get('username')
-		if valid_username(username):
-			self.render('welcome.html', username=username)
+		if self.valid_username(username):
+			self.render('/welcome.html', username=username)
 		else:
 			self.redirect('/signup')
 	
